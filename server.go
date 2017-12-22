@@ -9,6 +9,7 @@ import (
 	"time"
 
 	gossh "golang.org/x/crypto/ssh"
+	"github.com/e7/kcp-go"
 )
 
 // ErrServerClosed is returned by the Server's Serve, ListenAndServe,
@@ -244,6 +245,19 @@ func (srv *Server) ListenAndServe() error {
 		addr = ":22"
 	}
 	ln, err := net.Listen("tcp", addr)
+	if err != nil {
+		return err
+	}
+	return srv.Serve(ln)
+}
+
+func (srv *Server) ListenAndServeKCP() error {
+	addr := srv.Addr
+	if addr == "" {
+		addr = ":956"
+	}
+
+	ln, err := kcp.Listen(addr)
 	if err != nil {
 		return err
 	}
