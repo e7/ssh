@@ -90,6 +90,16 @@ func ListenAndServe(addr string, handler Handler, options ...Option) error {
 	return srv.ListenAndServe()
 }
 
+func ListenAndServeKCP(addr string, handler Handler, options ...Option) error {
+	srv := &Server{Addr: addr, Handler: handler}
+	for _, option := range options {
+		if err := srv.SetOption(option); err != nil {
+			return err
+		}
+	}
+	return srv.ListenAndServeKCP()
+}
+
 // Handle registers the handler as the DefaultHandler.
 func Handle(handler Handler) {
 	DefaultHandler = handler
